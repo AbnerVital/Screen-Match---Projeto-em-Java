@@ -1,5 +1,8 @@
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
+public class Filme {
+    String nome;
+    int anoDeLancamento;
+    boolean incluidoNoPlano;
+    double avaliacao;
+    int totalDeAvaliacao;
+    int duracaoEmMinutos;
 }
