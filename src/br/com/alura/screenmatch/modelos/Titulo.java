@@ -28,6 +28,10 @@ public class Titulo {
         return totalDeAvaliacao;
     }
 
+    public int getDuracaoEmMinutos() {
+        return duracaoEmMinutos;
+    }
+
     public void exibeFichaTecnica () {
         System.out.println("Nome do filme: " + nome);
         System.out.println("Ano de lançamento: " + anoDeLancamento);
