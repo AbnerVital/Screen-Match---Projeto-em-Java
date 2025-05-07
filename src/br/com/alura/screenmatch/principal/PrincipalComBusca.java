@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.principal;
 
+import br.com.alura.screenmatch.excecao.ErroDeConversaoDeAnoException;
 import br.com.alura.screenmatch.modelos.Titulo;
 import br.com.alura.screenmatch.modelos.TituloOmdb;
 import com.google.gson.FieldNamingPolicy;
@@ -18,33 +19,37 @@ public class PrincipalComBusca {
         Scanner leitura = new Scanner(System.in);
         System.out.println("Digite um filme para busca: ");
         var busca = leitura.nextLine();
-        String endereco = "https://www.omdbapi.com/?t=" + busca + "&apikey=20b62d34";
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(endereco))
-                .build();
-        HttpResponse<String> response = client
-                .send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.body());
-        String json = response.body();
-
-        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
-
-        TituloOmdb meutituloOmdb = gson.fromJson(json, TituloOmdb.class);
-        System.out.println(meutituloOmdb);
+        String endereco = "https://www.omdbapi.com/?t=" + busca.replace(" ", "+") + "&apikey=20b62d34";
         try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(endereco))
+                    .build();
+            HttpResponse<String> response = client
+                    .send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
+            String json = response.body();
+
+            Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
+
+            TituloOmdb meutituloOmdb = gson.fromJson(json, TituloOmdb.class);
+            System.out.println(meutituloOmdb);
+//        try {
             Titulo meutitulo = new Titulo(meutituloOmdb);
             System.out.println("Meu titulo convertido:");
             System.out.println(meutitulo);
 
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             System.out.println("Aconteceteu um erro: ");
+            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Algum erro de argumento, verifique o endereço");
+            System.out.println(e.getMessage());
+        } catch (ErroDeConversaoDeAnoException e){
             System.out.println(e.getMessage());
         }
 
         System.out.println("O programa finalizou corretamente!");
-
 
     }
 }
